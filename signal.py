@@ -30,11 +30,15 @@ def fourier_spectrum(signal_values):
     return [fourier_transformation(signal_values, j, N) for j in range(N)]
 
 
-def repaired_signal(signal_index, fourier_spectrum):
-    N = len(fourier_spectrum)
-    amplitudes, phases = zip(*fourier_spectrum)
+def polyharmonic_signal(signal_index, N, summand_number, spectrum):
+    amplitudes, phases = zip(*spectrum)
 
     def summand(sum_index):
         return amplitudes[sum_index] * cos((2 * pi * sum_index * signal_index / N) - phases[sum_index])
 
-    return sum(summand(j) for j in range((N // 2) - 1))
+    return sum(summand(j) for j in range(summand_number))
+
+
+def repaired_signal(signal_index, fourier_spectrum):
+    N = len(fourier_spectrum)
+    return polyharmonic_signal(signal_index, N, N // 2 - 1, fourier_spectrum)
